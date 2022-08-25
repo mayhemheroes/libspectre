@@ -1,0 +1,4 @@
+project: PROJECT
+target: spectre_read_fuzzer
+cmds:
+- cmd: /out/spectre_read_fuzzer
