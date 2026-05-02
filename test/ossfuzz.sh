@@ -1,15 +1,20 @@
 # This script is meant to be run by
 # https://github.com/google/oss-fuzz/blob/master/projects/libspectre/Dockerfile
 
+export CFLAGS="$CFLAGS -gdwarf-4"
+export CXXFLAGS="$CXXFLAGS -gdwarf-4"
+
 cd ghostscript
-./configure
+touch configure.ac Makefile.am aclocal.m4 configure Makefile.in
+./configure --disable-maintainer-mode
 make -j$(nproc) soinstall
 make -j$(nproc) libgs
 cd ..
 rm /usr/local/lib/libgs.so*
 cp ghostscript/bin/gs.a /usr/local/lib/libgs.a
 
-./autogen.sh --enable-static --disable-shared
+touch configure.ac Makefile.am aclocal.m4 configure Makefile.in
+./autogen.sh --enable-static --disable-shared --disable-maintainer-mode
 make -j$(nproc)
 
 $CXX $CXXFLAGS $SRC/libspectre/test/spectre_read_fuzzer.c -I. \
